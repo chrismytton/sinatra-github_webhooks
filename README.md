@@ -1,6 +1,6 @@
-# Sinatra::GithubWebhooks
+# Sinatra::GithubWebhooks [![Build Status](https://travis-ci.org/chrismytton/sinatra-github_webhooks.svg?branch=master)](https://travis-ci.org/chrismytton/sinatra-github_webhooks)
 
-Helper methods for receiving GitHub webhooks with Sinatra.
+Helper methods for receiving [GitHub webhooks](https://developer.github.com/webhooks/) with Sinatra.
 
 ## Installation
 
@@ -20,7 +20,58 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+This module provides two methods to use when handling GitHub webhook requests:
+
+- `github_event` This is the value of the `X-Github-Event` header in the request, e.g. `pull_request`
+- `payload`      This is a Hash of the request body after being parsed.
+
+If you provided a webhook secret when you configured your GitHub webhook you can ensure the request comes from GitHub by setting `github_webhook_secret`.
+
+Using this extension in classic style Sinatra apps is as simple as requiring the extension, optionally defining `github_webhook_secret` for verifying webhooks, and using the methods:
+
+```ruby
+require 'sinatra'
+require 'sinatra/github_webhooks'
+
+configure do
+  set :github_webhook_secret, 's3cret'
+end
+
+get '/event_handler' do
+  github_event  # Value of the X-Github-Event header
+  payload       # Hash of the request body
+
+  if github_event == 'pull_request' && payload['action'] == 'opened'
+    # Do something in response to a newly opened Pull Request.
+  end
+  'ok'
+end
+```
+
+Sinatra::Base subclasses need to require and include the module explicitly using the `helpers` method:
+
+```ruby
+require 'sinatra/base'
+require 'sinatra/github_webhooks'
+
+class WebhookApp < Sinatra::Base
+  helpers Sinatra::GithubWebhooks
+
+  configure do
+    set :github_webhook_secret, 's3cret'
+  end
+
+  get '/event_handler' do
+    github_event  # Value of the X-Github-Event header
+    payload       # Hash of the request body
+
+    if github_event == 'pull_request' && payload['action'] == 'opened'
+      # Do something in response to a newly opened Pull Request.
+    end
+    'ok'
+  end
+end
+```
 
 ## Development
 
