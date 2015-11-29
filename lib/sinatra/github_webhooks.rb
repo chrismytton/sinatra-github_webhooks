@@ -1,13 +1,11 @@
 require 'sinatra/github_webhooks/version'
 
 require 'sinatra/base'
-require 'openssl'
+require 'rack/github_webhooks'
 require 'json'
 
 module Sinatra
   module GithubWebhooks
-    HMAC_DIGEST = OpenSSL::Digest.new('sha1')
-
     def github_event
       request.env['HTTP_X_GITHUB_EVENT']
     end
@@ -31,16 +29,12 @@ module Sinatra
         logger.warn "No :github_webhook_secret setting found, skipping signature verification"
         return
       end
-      signature = 'sha1=' + OpenSSL::HMAC.hexdigest(
-        HMAC_DIGEST,
+      signature = Rack::GithubWebhooks::Signature.new(
         settings.github_webhook_secret,
+        request.env['HTTP_X_HUB_SIGNATURE'],
         payload_body
       )
-      signatures_match = Rack::Utils.secure_compare(
-        signature,
-        request.env['HTTP_X_HUB_SIGNATURE']
-      )
-      return halt 500, "Signatures didn't match!" unless signatures_match
+      return halt 500, "Signatures didn't match!" unless signature.valid?
     end
   end
 
