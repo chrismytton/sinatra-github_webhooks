@@ -36,7 +36,7 @@ class SinatraGithubWebhooksTest < Minitest::Test
   end
 
   def app
-    GithubWebhookHandlerApp
+    @app ||= GithubWebhookHandlerApp
   end
 
   def test_that_it_has_a_version_number
@@ -66,15 +66,11 @@ class SinatraGithubWebhooksTest < Minitest::Test
   end
 
   def test_missing_secret
-    def self.app
-      GithubWebhookHandlerNoSecretApp
-    end
+    @app = GithubWebhookHandlerNoSecretApp
     body = '{"action": "opened"}'
     post '/event_handler', body, 'HTTP_X_HUB_SIGNATURE' => body_signature(body)
     assert_equal 200, last_response.status
     assert_equal 'opened', last_response.body
-    def self.app
-      GithubWebhookHandlerApp
-    end
+    @app = GithubWebhookHandlerApp
   end
 end
