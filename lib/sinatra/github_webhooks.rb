@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'sinatra/github_webhooks/version'
 
 require 'sinatra/base'
@@ -26,7 +28,7 @@ module Sinatra
     # Taken from https://developer.github.com/webhooks/securing/
     def verify_signature(payload_body)
       unless settings.respond_to?(:github_webhook_secret)
-        logger.warn "No :github_webhook_secret setting found, skipping signature verification"
+        logger.warn 'No :github_webhook_secret setting found, skipping signature verification'
         return
       end
       signature = Rack::GithubWebhooks::Signature.new(

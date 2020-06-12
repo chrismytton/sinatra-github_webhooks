@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class GithubWebhookHandlerApp < Sinatra::Base
@@ -52,8 +54,8 @@ class SinatraGithubWebhooksTest < Minitest::Test
 
   def test_invalid_signature
     post '/event_handler',
-      '{}',
-      'HTTP_X_HUB_SIGNATURE' => 'sha1=invalid'
+         '{}',
+         'HTTP_X_HUB_SIGNATURE' => 'sha1=invalid'
     assert_equal 500, last_response.status
     assert_equal "Signatures didn't match!", last_response.body
   end
