@@ -11,7 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.2.0] - 2015-11-29
 
-### Changed
+### Changed
 
 - Internal refactor to use signature verification logic from `rack-github_webhooks`
 
@@ -22,5 +22,5 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - `github_event` method for getting the value of the `X-Github-Event`
 - `payload` method which returns a Hash of the request body after verifying the request signature.
 
-[0.2.0]: https://github.com/chrismytton/rack-github_webhooks/compare/v0.1.0...v0.2.0
-[0.2.1]: https://github.com/chrismytton/rack-github_webhooks/compare/v0.2.0...v0.2.1
+[0.2.0]: https://github.com/chrismytton/sinatra-github_webhooks/compare/v0.1.0...v0.2.0
+[0.2.1]: https://github.com/chrismytton/sinatra-github_webhooks/compare/v0.2.0...v0.2.1
