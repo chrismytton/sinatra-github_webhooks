@@ -13,7 +13,7 @@ module Sinatra
     end
 
     def payload
-      JSON.parse(payload_body)
+      ::JSON.parse(payload_body)
     end
 
     private
